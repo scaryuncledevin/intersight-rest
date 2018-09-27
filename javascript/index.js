@@ -286,6 +286,7 @@ const intersightREST = async function intersight_call({httpMethod="", resourcePa
         qs: queryParams,
         body: body,
         headers: request_header,
+        resolveWithFullResponse: true,
         proxy: proxy,
         json:true
     };
