@@ -137,19 +137,6 @@ function getGMTDate() {
 }
 
 /**
- * Callback for sending HTTP requests.
- * @function makeRequest
- * @private
- * @param  {Object} requestData     Requests formatted object.
- * @return {Object}                 Javascript Object from JSON response.
- */
-function makeRequest(requestData) {
-    return request(requestData).then(response => {
-        return response.toJSON();
-    });
-}
-
-/**
  * Retrieve an Intersight object moid by name.
  * @function getMoidByName
  * @private
@@ -172,8 +159,8 @@ async function getMoidByName(resourcePath, targetName) {
 
     var response = await intersightREST(options);
 
-    if(JSON.parse(response.body).Results != null) {
-        locatedMoid = JSON.parse(response.body).Results[0].Moid;
+    if(response.body.Results != null) {
+        locatedMoid = response.body.Results[0].Moid;
     } else {
         return Promise.reject(`Object with name "${targetName}" not found!`);
     }
@@ -297,14 +284,14 @@ const intersightREST = async function intersight_call({httpMethod="", resourcePa
         method: method,
         url: targetUrl,
         qs: queryParams,
-        body: JSON.stringify(body),
+        body: body,
         headers: request_header,
-        resolveWithFullResponse: true,
-        proxy: proxy
+        proxy: proxy,
+        json:true
     };
 
     // Make HTTP request & return a Javascript Promise
-    return makeRequest(requestOptions);
+    return request(requestOptions)
 }
 
 // Export the module functions
